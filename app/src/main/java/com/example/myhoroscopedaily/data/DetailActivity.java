@@ -142,12 +142,12 @@ public class DetailActivity extends AppCompatActivity implements SharedPreferenc
     private void addToPrefsForWidget() {
         SharedPreferences preferences = getApplicationContext().getSharedPreferences(WIDGET_PREF, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-//        editor.putInt(ID_PREF, mRecipeId);
+
         editor.putString(NAME_PREF, sunsign);
         editor.apply();
 
-        // add selected recipe to widget
+
         WidgetProvider.updateWidget(this);
     }
-//
+
 }
