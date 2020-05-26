@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">MyHoroscopeDaily</string>
+
+    <string name="errorMessage">Something went wrong, please try again</string>
+
+    <string name="todayPrediction">Today\'s Prediction:</string>
+    <string name="yesterdayPrediction">Yesterday\'s Prediction:</string>
+    <string name="tomorrowPrediction">Tomorrow\'s Prediction:</string>
+
+    <string name="buttonYesterday">Yesterday</string>
+    <string name="buttonTomorrow">Tomorrow</string>
+
+</resources>
