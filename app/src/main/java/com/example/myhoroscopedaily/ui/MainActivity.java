@@ -49,8 +49,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Sunsi
 
     private AdView mAdView;
 
-    private Parcelable listState;
-    private RecyclerView list;
+    private int scrollPosition;
 
 
     @SuppressLint("ResourceType")
@@ -80,13 +79,12 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Sunsi
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-
-
-
         if(savedInstanceState != null)
         {
-            listState = savedInstanceState.getParcelable("ListState");
-            mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
+            Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+//            loadSunsignList();
+//            return;
         }
 
         if (isInternetAvailable() != false){
@@ -101,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Sunsi
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("ListState", mRecyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mRecyclerView.getLayoutManager().onSaveInstanceState());
     }
 
 

@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,6 +33,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -38,9 +42,11 @@ public class DetailActivity extends AppCompatActivity {
     public static final String WIDGET_PREF = "widget_prefs";
     public static final String ID_PREF = "id";
     public static final String NAME_PREF = "name";
+    public static final String PREDICTION = "prediction";
 
     public String DAY = "today";
     public String sunsign;
+    public String passPrediction;
 
 
 
@@ -58,7 +64,6 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView mPrediction = findViewById(R.id.tv_sunsign_prediction);
 
-//        updatePrediction(mPrediction);
 
         mYesterday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,13 +71,16 @@ public class DetailActivity extends AppCompatActivity {
                 if (DAY.compareTo("today") == 0) {
                     mDay.setText(R.string.yesterdayPrediction);
                     mYesterday.setVisibility(View.INVISIBLE);
+                    mTomorrow.setText(R.string.buttonToday);
                     DAY = "yesterday";
-//                    updatePrediction(mPrediction);
+                    displayPrediction(mPrediction);
                 } else {
                     mDay.setText(R.string.todayPrediction);
                     mTomorrow.setVisibility(View.VISIBLE);
+                    mYesterday.setText(R.string.buttonYesterday);
                     DAY = "today";
-//                    updatePrediction(mPrediction);
+                    displayPrediction(mPrediction);
+
                 }
             }
         });
@@ -83,11 +91,15 @@ public class DetailActivity extends AppCompatActivity {
                 if (DAY.compareTo("today") == 0) {
                     mDay.setText(R.string.tomorrowPrediction);
                     mTomorrow.setVisibility(View.INVISIBLE);
+                    mYesterday.setText(R.string.buttonToday);
                     DAY = "tomorrow";
+                    displayPrediction(mPrediction);
                 } else {
                     mDay.setText(R.string.todayPrediction);
                     mYesterday.setVisibility(View.VISIBLE);
+                    mTomorrow.setText(R.string.buttonTomorrow);
                     DAY = "today";
+                    displayPrediction(mPrediction);
                 }
             }
         });
@@ -107,17 +119,32 @@ public class DetailActivity extends AppCompatActivity {
                 .load("https://i2.wp.com/www.pictureboxblue.com/pbb-cont/pbb-up/2019/11/"+image_url+"-s.jpg?w=800&ssl=1")
                 .fit()
                 .into(mPoster);
-
-        mPrediction.setText("This is prediction");
-
-
+        displayPrediction(mPrediction);
     }
+    public void displayPrediction(TextView mPrediction) {
+        final AstrologyModel[] astrology = new AstrologyModel[1];
+        final String[] prediction = {""};
+        Service service = RetrofitClient.getClient().create(Service.class);
+        Call<AstrologyModel> call = service.getAstrology("http://sandipbgt.com/theastrologer/api/horoscope/"+ sunsign +"/"+ DAY +"/");
+        Log.e("Prediction", call.toString());
+        call.enqueue(new Callback<AstrologyModel>() {
+            @Override
+            public void onResponse(Call<AstrologyModel> call, Response<AstrologyModel> response) {
+                if (response.isSuccessful()) {
+                    astrology[0] = response.body();
+                    prediction[0] = astrology[0].getHoroscope();
+                    Log.e("Prediction", prediction[0]);
+                    passPrediction = prediction[0];
+                    mPrediction.setText(prediction[0]);
+                }
+            }
 
-//    public void updatePrediction (View v){
-//        Intent intent = new Intent(this, DetailIntentService.class);
-//        intent.setAction(Detail.ACTION_MODIFY_DETAIL);
-//        startService(intent);
-//    }
+            @Override
+            public void onFailure(Call<AstrologyModel> call, Throwable t) {
+                Log.e("TAG", t.getMessage());
+            }
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -126,15 +153,6 @@ public class DetailActivity extends AppCompatActivity {
         return true;
     }
 
-//    private void updatePrediction() {
-//        String prediction = AstrologyModel.getHoroscope();
-//        mPrediction.setText(prediction);
-//    }
-
-//    @Override
-//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//        updatePrediction(mPrediction);
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -149,8 +167,8 @@ public class DetailActivity extends AppCompatActivity {
     private void addToPrefsForWidget() {
         SharedPreferences preferences = getApplicationContext().getSharedPreferences(WIDGET_PREF, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-
         editor.putString(NAME_PREF, sunsign);
+        editor.putString(PREDICTION, passPrediction);
         editor.apply();
 
 

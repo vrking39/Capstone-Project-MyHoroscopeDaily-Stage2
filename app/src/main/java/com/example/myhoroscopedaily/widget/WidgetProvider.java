@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 
 import com.example.myhoroscopedaily.R;
 import com.example.myhoroscopedaily.data.DetailActivity;
+import com.example.myhoroscopedaily.ui.Detail;
 import com.example.myhoroscopedaily.ui.MainActivity;
 
 
@@ -19,7 +20,7 @@ import com.example.myhoroscopedaily.ui.MainActivity;
  */
 public class WidgetProvider extends AppWidgetProvider {
 
-    static String prediction = new String();
+    static String prediction;
     private static String text;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
@@ -32,10 +33,12 @@ public class WidgetProvider extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.sunsign_widget);
         views.setTextViewText(R.id.appwidget_text, text);
+        prediction = sharedPreferences.getString(DetailActivity.PREDICTION, "no sunsign selected");
+        views.setTextViewText(R.id.widget_prediction_view, prediction);
 
-        //Set adapter
-        Intent intent = new Intent(context, WidgetService.class);
-        views.setRemoteAdapter(R.id.widget_list, intent);
+//        //Set adapter
+//        Intent intent = new Intent(context, WidgetService.class);
+//        views.setRemoteAdapter(R.id.widget_prediction_view, intent);
 
         //open mainActivity when title is clicked
         Intent clickIntent = new Intent(context, MainActivity.class);
@@ -45,7 +48,7 @@ public class WidgetProvider extends AppWidgetProvider {
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_list);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_prediction_view);
     }
 
     public static void updateWidget(Context context) {

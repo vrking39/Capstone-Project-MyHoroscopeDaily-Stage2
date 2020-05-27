@@ -9,6 +9,7 @@
 
     <string name="buttonYesterday">Yesterday</string>
     <string name="buttonTomorrow">Tomorrow</string>
+    <string name="buttonToday">Today</string>
 
     <string name="cd_detail_image">Image of selected sunsign</string>
 

@@ -18,11 +18,13 @@
         android:textSize="20sp"
         android:textStyle="bold|italic" />
 
-    <ListView
-        android:id="@+id/widget_list"
+    <TextView
+        android:id="@+id/widget_prediction_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/appwidget_text"
-        android:descendantFocusability="blocksDescendants" />
+        android:descendantFocusability="blocksDescendants"
+        android:background="@color/cardview_light_background"/>
+
 
 </RelativeLayout>
