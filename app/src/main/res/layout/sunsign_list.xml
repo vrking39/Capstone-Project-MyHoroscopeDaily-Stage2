@@ -16,7 +16,8 @@
             android:id='@+id/iv_sunsign_image'
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background='#00000000'/>
+            android:background='#00000000'
+            android:contentDescription="@string/cd_image"/>
 
         <TextView
             android:id='@+id/tv_sunsign'

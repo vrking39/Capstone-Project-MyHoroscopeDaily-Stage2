@@ -15,7 +15,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/aquarius" />
+        app:srcCompat="@drawable/aquarius"
+        android:contentDescription="@string/cd_detail_image" />
 
     <TextView
         android:id="@+id/tv_day"
@@ -35,7 +36,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="26dp"
-        android:text="TextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_day" />
 

@@ -1,6 +1,7 @@
 package com.example.myhoroscopedaily.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,6 +9,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.Layout;
 import android.util.Log;
 import android.view.View;
@@ -40,10 +43,15 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Sunsi
     private ProgressBar mLoading;
 
     public static final String TAG = MainActivity.class.getSimpleName();
+    private static final String BUNDLE_RECYCLER_LAYOUT = "classname.recycler.layout";
 
     private List mSunsignList;
 
     private AdView mAdView;
+
+    private Parcelable listState;
+    private RecyclerView list;
+
 
     @SuppressLint("ResourceType")
     @BindView(R.layout.sunsign_list)
@@ -56,8 +64,9 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Sunsi
         mRecyclerView = findViewById(R.id.rv_main);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
+        mRecyclerView.setHasFixedSize(true);
+
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(false);
 
         adapter = new MainAdapter(this);
         mRecyclerView.setAdapter(adapter);
@@ -73,6 +82,13 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Sunsi
 
 
 
+
+        if(savedInstanceState != null)
+        {
+            listState = savedInstanceState.getParcelable("ListState");
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
+        }
+
         if (isInternetAvailable() != false){
             mErrorMessage.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.INVISIBLE);
@@ -81,6 +97,13 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Sunsi
         }
 
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("ListState", mRecyclerView.getLayoutManager().onSaveInstanceState());
+    }
+
 
     private void loadSunsignList(){
         new FetchSunsignsTask().execute();

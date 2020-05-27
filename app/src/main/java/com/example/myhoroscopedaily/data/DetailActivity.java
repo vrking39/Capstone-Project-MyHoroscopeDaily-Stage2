@@ -32,7 +32,7 @@ import java.util.List;
 
 import retrofit2.Call;
 
-public class DetailActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class DetailActivity extends AppCompatActivity {
 
     public static final String INTENT_EXTRA = "sunsign";
     public static final String WIDGET_PREF = "widget_prefs";
@@ -41,9 +41,6 @@ public class DetailActivity extends AppCompatActivity implements SharedPreferenc
 
     public String DAY = "today";
     public String sunsign;
-
-    private ImageView mPoster = findViewById(R.id.iv_sunsign_detail_image);
-    private TextView mPrediction = findViewById(R.id.tv_sunsign_prediction);
 
 
 
@@ -57,10 +54,11 @@ public class DetailActivity extends AppCompatActivity implements SharedPreferenc
         final Button mTomorrow = findViewById(R.id.btn_next);
         final TextView mDay = findViewById(R.id.tv_day);
 
+        ImageView mPoster = findViewById(R.id.iv_sunsign_detail_image);
 
+        TextView mPrediction = findViewById(R.id.tv_sunsign_prediction);
 
-
-        updatePrediction(mPrediction);
+//        updatePrediction(mPrediction);
 
         mYesterday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,12 +67,12 @@ public class DetailActivity extends AppCompatActivity implements SharedPreferenc
                     mDay.setText(R.string.yesterdayPrediction);
                     mYesterday.setVisibility(View.INVISIBLE);
                     DAY = "yesterday";
-                    updatePrediction(mPrediction);
+//                    updatePrediction(mPrediction);
                 } else {
                     mDay.setText(R.string.todayPrediction);
                     mTomorrow.setVisibility(View.VISIBLE);
                     DAY = "today";
-                    updatePrediction(mPrediction);
+//                    updatePrediction(mPrediction);
                 }
             }
         });
@@ -97,8 +95,17 @@ public class DetailActivity extends AppCompatActivity implements SharedPreferenc
         sunsign = getIntent().getStringExtra(INTENT_EXTRA);
 
         setTitle(sunsign);
+        String image_url = "";
+        switch (sunsign) {
+            case "taurus":
+                image_url = "Taurus";
+                break;
+            default: image_url = sunsign;
+        }
+
         Picasso.get()
-                .load(R.drawable.aries)
+                .load("https://i2.wp.com/www.pictureboxblue.com/pbb-cont/pbb-up/2019/11/"+image_url+"-s.jpg?w=800&ssl=1")
+                .fit()
                 .into(mPoster);
 
         mPrediction.setText("This is prediction");
@@ -106,11 +113,11 @@ public class DetailActivity extends AppCompatActivity implements SharedPreferenc
 
     }
 
-    public void updatePrediction (View v){
-        Intent intent = new Intent(this, DetailIntentService.class);
-        intent.setAction(Detail.ACTION_MODIFY_DETAIL);
-        startService(intent);
-    }
+//    public void updatePrediction (View v){
+//        Intent intent = new Intent(this, DetailIntentService.class);
+//        intent.setAction(Detail.ACTION_MODIFY_DETAIL);
+//        startService(intent);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -124,10 +131,10 @@ public class DetailActivity extends AppCompatActivity implements SharedPreferenc
 //        mPrediction.setText(prediction);
 //    }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        updatePrediction(mPrediction);
-    }
+//    @Override
+//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+//        updatePrediction(mPrediction);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
